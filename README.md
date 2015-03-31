@@ -98,7 +98,7 @@ After installing WordPress, customize it by following these steps after logging 
     * Minimum Level to Use this plugin should be whoever you designate to reorder the sections in the app
     * Auto-sort should be ON
     * Admin sort should be checked
-*For Easy WP SMTP, create an e-mail account that can be used with SMTP (gmail, for example: yoursite@gmail.com).  [This will assume you picked gmail.  Gmail is useful because many e-mail services block e-mails from Wordpress installations and you can send 2000 e-mails a day through this.](https://support.google.com/a/answer/176600?hl=en)
+*  For Easy WP SMTP, create an e-mail account that can be used with SMTP (gmail, for example: yoursite@gmail.com).  [This will assume you picked gmail.  Gmail is useful because many e-mail services block e-mails from Wordpress installations and you can send 2000 e-mails a day through this.](https://support.google.com/a/answer/176600?hl=en)
      *  Enter "From Email Address" (yoursite@gmail.com)
      *  Enter "From Name" (XCL App, for example)
      *  Your SMTP Host (smtp.gmail.com, e.g) 
