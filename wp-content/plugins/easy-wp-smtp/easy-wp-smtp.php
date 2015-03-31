@@ -1,7 +1,7 @@
 <?php
 /*
 Plugin Name: Easy WP SMTP
-Version: 1.1.1
+Version: 1.1.8
 Plugin URI: https://wp-ecommerce.net/easy-wordpress-smtp-send-emails-from-your-wordpress-site-using-a-smtp-server-2197
 Author: wpecommerce
 Author URI: https://wp-ecommerce.net/
@@ -120,15 +120,15 @@ if ( ! function_exists ( 'swpsmtp_admin_head' ) ) {
  * @return void
  */
 if ( ! function_exists ( 'swpsmtp_init_smtp' ) ) {
-	function swpsmtp_init_smtp( $phpmailer ) {
-
+	function swpsmtp_init_smtp( $phpmailer ) {              
 		$swpsmtp_options = get_option( 'swpsmtp_options' );
-		
 		/* Set the mailer type as per config above, this overrides the already called isMail method */
 		$phpmailer->IsSMTP();
 		$from_email = $swpsmtp_options['from_email_field'];
+                $phpmailer->From = $from_email;
                 $from_name  = $swpsmtp_options['from_name_field'];
-                $phpmailer->SetFrom( $from_email, $from_name );
+                $phpmailer->FromName = $from_name;
+                $phpmailer->SetFrom($phpmailer->From, $phpmailer->FromName);
 		/* Set the SMTPSecure value */
 		if ( $swpsmtp_options['smtp_settings']['type_encryption'] !== 'none' ) {
 			$phpmailer->SMTPSecure = $swpsmtp_options['smtp_settings']['type_encryption'];
@@ -142,7 +142,7 @@ if ( ! function_exists ( 'swpsmtp_init_smtp' ) ) {
 		if( 'yes' == $swpsmtp_options['smtp_settings']['autentication'] ){
 			$phpmailer->SMTPAuth = true;
 			$phpmailer->Username = $swpsmtp_options['smtp_settings']['username'];
-			$phpmailer->Password = $swpsmtp_options['smtp_settings']['password'];
+			$phpmailer->Password = swpsmtp_get_password();
 		}
 	}
 }
@@ -159,7 +159,7 @@ if ( ! function_exists( 'swpsmtp_settings' ) ) {
                 
 		if ( isset( $_POST['swpsmtp_form_submit'] ) && check_admin_referer( plugin_basename( __FILE__ ), 'swpsmtp_nonce_name' ) ) {	
 			/* Update settings */
-			$swpsmtp_options['from_name_field'] = isset( $_POST['swpsmtp_from_name'] ) ? $_POST['swpsmtp_from_name'] : '';
+			$swpsmtp_options['from_name_field'] = isset( $_POST['swpsmtp_from_name'] ) ? sanitize_text_field(wp_unslash($_POST['swpsmtp_from_name'])) : '';
 			if( isset( $_POST['swpsmtp_from_email'] ) ){
 				if( is_email( $_POST['swpsmtp_from_email'] ) ){
 					$swpsmtp_options['from_email_field'] = $_POST['swpsmtp_from_email'];
@@ -169,11 +169,12 @@ if ( ! function_exists( 'swpsmtp_settings' ) ) {
 				}
 			}
 					
-			$swpsmtp_options['smtp_settings']['host']     				= $_POST['swpsmtp_smtp_host'];
+			$swpsmtp_options['smtp_settings']['host']     				= sanitize_text_field($_POST['swpsmtp_smtp_host']);
 			$swpsmtp_options['smtp_settings']['type_encryption'] = ( isset( $_POST['swpsmtp_smtp_type_encryption'] ) ) ? $_POST['swpsmtp_smtp_type_encryption'] : 'none' ;
 			$swpsmtp_options['smtp_settings']['autentication']   = ( isset( $_POST['swpsmtp_smtp_autentication'] ) ) ? $_POST['swpsmtp_smtp_autentication'] : 'yes' ;
-			$swpsmtp_options['smtp_settings']['username']  			= $_POST['swpsmtp_smtp_username'];
-			$swpsmtp_options['smtp_settings']['password'] 				= $_POST['swpsmtp_smtp_password'];
+			$swpsmtp_options['smtp_settings']['username']  			= sanitize_text_field($_POST['swpsmtp_smtp_username']);
+                        $smtp_password = trim($_POST['swpsmtp_smtp_password']);
+			$swpsmtp_options['smtp_settings']['password'] 				= base64_encode($smtp_password);
 
 			/* Check value from "SMTP port" option */
 			if ( isset( $_POST['swpsmtp_smtp_port'] ) ) {
@@ -229,21 +230,21 @@ if ( ! function_exists( 'swpsmtp_settings' ) ) {
 					<tr valign="top">
 						<th scope="row"><?php _e( "From Email Address", 'easy_wp_smtp' ); ?></th>
 						<td>
-							<input type="text" name="swpsmtp_from_email" value="<?php echo stripslashes( $swpsmtp_options['from_email_field'] ); ?>"/><br />
+							<input type="text" name="swpsmtp_from_email" value="<?php echo esc_attr( $swpsmtp_options['from_email_field'] ); ?>"/><br />
 							<span class="swpsmtp_info"><?php _e( "This email address will be used in the 'From' field.", 'easy_wp_smtp' ); ?></span>
 					</td>
 					</tr>
 					<tr valign="top">
 						<th scope="row"><?php _e( "From Name", 'easy_wp_smtp' ); ?></th>
 						<td>
-							<input type="text" name="swpsmtp_from_name" value="<?php echo $swpsmtp_options['from_name_field']; ?>"/><br />
+							<input type="text" name="swpsmtp_from_name" value="<?php echo esc_attr($swpsmtp_options['from_name_field']); ?>"/><br />
 							<span  class="swpsmtp_info"><?php _e( "This text will be used in the 'FROM' field", 'easy_wp_smtp' ); ?></span>
 						</td>
 					</tr>			
 					<tr class="ad_opt swpsmtp_smtp_options">
 						<th><?php _e( 'SMTP Host', 'easy_wp_smtp' ); ?></th>
 						<td>
-							<input type='text' name='swpsmtp_smtp_host' value='<?php echo $swpsmtp_options['smtp_settings']['host']; ?>' /><br />
+							<input type='text' name='swpsmtp_smtp_host' value='<?php echo esc_attr($swpsmtp_options['smtp_settings']['host']); ?>' /><br />
 							<span class="swpsmtp_info"><?php _e( "Your mail server", 'easy_wp_smtp' ); ?></span>
 						</td>
 					</tr>
@@ -259,12 +260,12 @@ if ( ! function_exists( 'swpsmtp_settings' ) ) {
 					<tr class="ad_opt swpsmtp_smtp_options">
 						<th><?php _e( 'SMTP Port', 'easy_wp_smtp' ); ?></th>
 						<td>
-							<input type='text' name='swpsmtp_smtp_port' value='<?php echo $swpsmtp_options['smtp_settings']['port']; ?>' /><br />
+							<input type='text' name='swpsmtp_smtp_port' value='<?php echo esc_attr($swpsmtp_options['smtp_settings']['port']); ?>' /><br />
 							<span class="swpsmtp_info"><?php _e( "The port to your mail server", 'easy_wp_smtp' ); ?></span>
 						</td>
 					</tr>
 					<tr class="ad_opt swpsmtp_smtp_options">
-						<th><?php _e( 'SMTP Autentication', 'easy_wp_smtp' ); ?></th>
+						<th><?php _e( 'SMTP Authentication', 'easy_wp_smtp' ); ?></th>
 						<td>
 							<label for="swpsmtp_smtp_autentication"><input type="radio" id="swpsmtp_smtp_autentication" name="swpsmtp_smtp_autentication" value='no' <?php if( 'no' == $swpsmtp_options['smtp_settings']['autentication'] ) echo 'checked="checked"'; ?> /> <?php _e( 'No', 'easy_wp_smtp' ); ?></label>
 							<label for="swpsmtp_smtp_autentication"><input type="radio" id="swpsmtp_smtp_autentication" name="swpsmtp_smtp_autentication" value='yes' <?php if( 'yes' == $swpsmtp_options['smtp_settings']['autentication'] ) echo 'checked="checked"'; ?> /> <?php _e( 'Yes', 'easy_wp_smtp' ); ?></label><br />
@@ -274,14 +275,14 @@ if ( ! function_exists( 'swpsmtp_settings' ) ) {
 					<tr class="ad_opt swpsmtp_smtp_options">
 						<th><?php _e( 'SMTP username', 'easy_wp_smtp' ); ?></th>
 						<td>
-							<input type='text' name='swpsmtp_smtp_username' value='<?php echo $swpsmtp_options['smtp_settings']['username']; ?>' /><br />
+							<input type='text' name='swpsmtp_smtp_username' value='<?php echo esc_attr($swpsmtp_options['smtp_settings']['username']); ?>' /><br />
 							<span class="swpsmtp_info"><?php _e( "The username to login to your mail server", 'easy_wp_smtp' ); ?></span>
 						</td>
 					</tr>
 					<tr class="ad_opt swpsmtp_smtp_options">
 						<th><?php _e( 'SMTP Password', 'easy_wp_smtp' ); ?></th>
 						<td>
-							<input type='password' name='swpsmtp_smtp_password' value='<?php echo $swpsmtp_options['smtp_settings']['password']; ?>' /><br />
+							<input type='password' name='swpsmtp_smtp_password' value='<?php echo swpsmtp_get_password(); ?>' /><br />
 							<span class="swpsmtp_info"><?php _e( "The password to login to your mail server", 'easy_wp_smtp' ); ?></span>
 						</td>
 					</tr>
@@ -344,7 +345,7 @@ if ( ! function_exists( 'swpsmtp_test_mail' ) ) {
 		require_once( ABSPATH . WPINC . '/class-phpmailer.php' );
 		$mail = new PHPMailer();
 		
-		$from_name  = $swpsmtp_options['from_name_field'];
+		$from_name  = utf8_decode($swpsmtp_options['from_name_field']);
 		$from_email = $swpsmtp_options['from_email_field']; 
 		
 		$mail->IsSMTP();
@@ -353,7 +354,7 @@ if ( ! function_exists( 'swpsmtp_test_mail' ) ) {
 		if( 'yes' == $swpsmtp_options['smtp_settings']['autentication'] ){
 			$mail->SMTPAuth = true;
 			$mail->Username = $swpsmtp_options['smtp_settings']['username'];
-			$mail->Password = $swpsmtp_options['smtp_settings']['password'];
+			$mail->Password = swpsmtp_get_password();
 		}
 		
 		/* Set the SMTPSecure value, if set to none, leave this blank */
@@ -366,7 +367,7 @@ if ( ! function_exists( 'swpsmtp_test_mail' ) ) {
 		$mail->Port = $swpsmtp_options['smtp_settings']['port']; 
 		$mail->SetFrom( $from_email, $from_name );
 		$mail->isHTML( true );
-		$mail->Subject = $subject;
+		$mail->Subject = utf8_decode($subject);
 		$mail->MsgHTML( $message );
 		$mail->AddAddress( $to_email );
 		$mail->SMTPDebug = 0;
@@ -396,6 +397,27 @@ if ( ! function_exists( 'swpsmtp_send_uninstall' ) ) {
 		/* delete plugin options */
 		delete_site_option( 'swpsmtp_options' );
 		delete_option( 'swpsmtp_options' );
+	}
+}
+
+if ( ! function_exists( 'swpsmtp_get_password' ) ) {
+	function swpsmtp_get_password() {
+            $swpsmtp_options = get_option( 'swpsmtp_options' );
+            $temp_password = $swpsmtp_options['smtp_settings']['password'];
+            $password = "";
+            $decoded_pass = base64_decode($temp_password);
+            if (base64_encode($decoded_pass) === $temp_password) {  //it might be encoded
+                if(false === mb_detect_encoding($decoded_pass)){  //could not find character encoding.
+                    $password = $temp_password;
+                }
+                else{
+                    $password = base64_decode($temp_password); 
+                }               
+            }
+            else{ //not encoded
+                $password = $temp_password;
+            }
+            return $password;
 	}
 }
 

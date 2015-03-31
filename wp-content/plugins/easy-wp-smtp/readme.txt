@@ -3,8 +3,8 @@ Contributors: wpecommerce
 Donate link: https://wp-ecommerce.net/easy-wordpress-smtp-send-emails-from-your-wordpress-site-using-a-smtp-server-2197
 Tags: mail, wordpress smtp, phpmailer, smtp, wp_mail, email, gmail, outgoing mail, privacy, security, sendmail, ssl, tls, wp-phpmailer, mail smtp, wp smtp 
 Requires at least: 3.0
-Tested up to: 4.0
-Stable tag: 1.1.1
+Tested up to: 4.1
+Stable tag: 1.1.8
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -74,6 +74,41 @@ Inspired by [WP Mail SMTP](http://wordpress.org/plugins/wp-mail-smtp/) plugin
 
 
 == Changelog ==
+
+= 1.1.8 =
+
+* Easy SMTP now removes slashes from the "From Name" field.
+
+= 1.1.7 =
+
+* Made some improvements to the encoding option.
+
+= 1.1.7 =
+
+* Made some improvements to the encoding option.
+
+= 1.1.6 =
+
+* Fixed some character encoding issues of test email functionality
+* Plugin will now force the from name and email address saved in the settings (just like version 1.1.1)
+
+= 1.1.5 =
+
+* Fixed a typo in the plugin settings
+* SMTP Password is now encoded before saving it to the wp_options table
+
+= 1.1.4 =
+
+* Plugin will now also override the default from name and email (WordPress)
+
+= 1.1.3 =
+
+* Removed "ReplyTo" attribute since it was causing compatibility issues with some form plugins
+
+= 1.1.2 =
+
+* "ReplyTo" attribute will now be set when sending an email
+* The plugin will only override "From Email Address" and "Name" if they are not present
 
 = 1.1.1 =
 
