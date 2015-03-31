@@ -1,58 +1,58 @@
-# ExCL Developer Documentation #
+# XCL Developer Documentation #
 An Overview of how to install/configure WordPress, and a look into our custom WordPress plugin
 
 ### Contents ###
 
-1. [Introduction to ExCL](#exclIntro)
+1. [Introduction to XCL](#exclIntro)
 - [WordPress](#wordpress)
 	1. [Introduction to WordPress](#intro)
 	- [Setting up a Server](#setup)
 	- [Getting Started With WordPress](#getStarted)
 	- [Code Overview](#overview)
-	- [Enhancing the ExCL WordPress Plugin](#enhancements)
+	- [Enhancing the XCL WordPress Plugin](#enhancements)
 	- [Deploying WordPress](#deployment)
 	- [Updating WordPress](#updating)
 	- [Helpful Tools](#tools)
 - [Titanium](https://github.com/cmhouston/excl-mobile#titanium)
 - [Contributing](#contributing)
 
-# <a name="exclIntro"></a> Introduction to ExCL #
-ExCL is a platform that enables museums to engage visitors at museum activities through the use of 
+# <a name="exclIntro"></a> Introduction to XCL #
+XCL is a platform that enables museums to engage visitors at museum activities through the use of 
 a mobile application. Content is managed through a WordPress content management system by museum 
-staff, and visitors will download the customized ExCL app, written using [Appcelerator Titanium](http://www.appcelerator.com/titanium/), 
-to their mobile device. ExCL is also intended to be used by museums on kiosk devices and provides 
+staff, and visitors will download the customized XCL app, written using [Appcelerator Titanium](http://www.appcelerator.com/titanium/), 
+to their mobile device. XCL is also intended to be used by museums on kiosk devices and provides 
 a kiosk mode for this purpose.
 
-ExCL is divided into two parts: the content management system and the Appcelerator Titanium mobile application. This repository is for the WordPress content management system. [Click here to go to the Titanium project](https://github.com/cmhouston/excl-mobile).
+XCL is divided into two parts: the content management system and the Appcelerator Titanium mobile application. This repository is for the WordPress content management system. [Click here to go to the Titanium project](https://github.com/cmhouston/excl-mobile).
 
-This documentation is intended for ExCL developers and details the steps to setup and enhance  
+This documentation is intended for XCL developers and details the steps to setup and enhance  
 the content management system, which uses WordPress.
 
-If you are a developer, see the [developer documentation](docs/developerDocs.md) for the ExCL Wordpress technical documentation.
+If you are a developer, see the [developer documentation](docs/developerDocs.md) for the XCL Wordpress technical documentation.
 
 # <a name="wordpress"></a> WordPress #
 
 ## <a name="intro"></a> Introduction to WordPress ##
 WordPress is an open source blogging and content management system (CMS) platform. It is written in 
 [PHP](https://php.net/) and uses [MYSQL](http://www.mysql.com/) for the underlying database. WordPress allows powerful customization through plugins. 
-ExCL uses some required and some optional plugins to adapt WordPress to its needs.
+XCL uses some required and some optional plugins to adapt WordPress to its needs.
 
 ## <a name="setup"></a> Setting up a Server ##
 
 To allow your app to pull data from your Content Management System it must be hosted online. WordPress suggests a few options for hosting, and they can be found through the [WordPress Web Hosting](http://wordpress.org/hosting/) page.
 
-Once your host is created, created a database for ExCL and a MySQL user.
+Once your host is created, created a database for XCL and a MySQL user.
 
 ## <a name="getStarted"></a> Getting Started With Wordpress ##
 
 ### Download and Install WordPress ###
-ExCL was built on WordPress 3.9.1. For each WordPress environment to set up, download a fresh copy of 
+XCL was built on WordPress 3.9.1 (and had been updated to 4.1.1). For each WordPress environment to set up, download a fresh copy of 
 WordPress from [wordpress.org](http://www.wordpress.org). Follow WordPress's [setup instructions](http://codex.wordpress.org/Installing_WordPress) to complete the WordPress installation. We recommend 
 that each wordpress environment have its own database, or at the very least its own table prefix.
 
 ### Download and Install WordPress Plugins ###
 Once WordPress is installed, install and activate the following WordPress plugins. The version number is the latest 
-ExCL-tested version of the plugin. It is possible that later versions will also work, but it is not guaranteed.
+XCL-tested version of the plugin. It is possible that later versions will also work, but it is not guaranteed.
 
 * [Types - Complete Solution for Custom Fields and Types](http://wordpress.org/plugins/types/) (version 1.5.7)
 * [Category Order and Taxonomy Terms Order](https://wordpress.org/plugins/taxonomy-terms-order/) (version 1.3.6)
@@ -102,7 +102,7 @@ If you hit any errors during this process, simply refresh the page and try your 
 
 ## <a name="overview"></a> Code Overview ##
 
-The current plugin used to create the JSON relevant to the ExCL  is the [excl_json_api](wp-content/plugins/excl_json_api). Here are two example JSON files which show what JSON WordPress exports, one for each endpoint:
+The current plugin used to create the JSON relevant to the XCL  is the [excl_json_api](wp-content/plugins/excl_json_api). Here are two example JSON files which show what JSON WordPress exports, one for each endpoint:
 
 - Museum
 - Component
@@ -121,9 +121,9 @@ Here is a brief overview of the files contained in the plugin and the purposes t
 - WordPressWrapper.php – a header file that excl\_api\_controller builds off of
 
 
-## <a name="enhancements"></a> Enhancing the ExCL WordPress Plugin ##
+## <a name="enhancements"></a> Enhancing the XCL WordPress Plugin ##
 
-As features are added to the mobile app through the [Titanium code](https://github.com/cmhouston/excl-mobile) the WordPress ExCL plugin may have to be updated to accommodate that. However there are a couple enhancements that are already on the road map for ExCL: 
+As features are added to the mobile app through the [Titanium code](https://github.com/cmhouston/excl-mobile) the WordPress XCL plugin may have to be updated to accommodate that. However there are a couple enhancements that are already on the road map for XCL: 
 
 - Remove Quick Edit and Save all Options because they do not function correctly
 - Error handling if an ID given does not the post type requested
@@ -143,7 +143,7 @@ Periodically WordPress will come out with updates. These can be found on the Wor
 One thing to keep in mind when updating WordPress is that plugins may work slightly differently under different versions. This can cause errors between other plugins that are installed so it is recommended to thoroughly test your WordPress CMS system after you update.
 
 ## <a name="tools"></a> Helpful Tools ##
-Some of the tools that have been helpful to the initial ExCL Developers are:
+Some of the tools that have been helpful to the initial XCL Developers are:
 
 - [PhpStorm](http://www.jetbrains.com/phpstorm/)
 - [XDebug](http://xdebug.org/)
