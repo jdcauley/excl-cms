@@ -23,7 +23,7 @@ staff, and visitors will download the customized XCL app, written using [Appcele
 to their mobile device. XCL is also intended to be used by museums on kiosk devices and provides 
 a kiosk mode for this purpose.
 
-XCL is divided into two parts: the content management system and the Appcelerator Titanium mobile application. This repository is for the WordPress content management system. [Click here to go to the Titanium project](https://github.com/cmhouston/excl-mobile).
+XCL is divided into two parts: the content management system and the Appcelerator Titanium mobile application. This repository is for the WordPress content management system. [Click here to go to the Titanium project](https://github.com/lhs/excl-mobile).
 
 This documentation is intended for XCL developers and details the steps to setup and enhance  
 the content management system, which uses WordPress.
@@ -41,28 +41,29 @@ XCL uses some required and some optional plugins to adapt WordPress to its needs
 
 To allow your app to pull data from your Content Management System it must be hosted online. WordPress suggests a few options for hosting, and they can be found through the [WordPress Web Hosting](http://wordpress.org/hosting/) page.
 
-Once your host is created, created a database for XCL and a MySQL user.
+Once you have a web host that supports PHP and MYSQL (most do), create two directories in your public web directory (for Dreamhost, it's /yoursubdomain.dreamhoster.com/) named qa and prod via your FTP client or if your hosting service allows it, via SSH.  Note:  It's a good practice to have separate installations of Wordpress. One will be a quality assurance site and the other, a live production site.  You can test new content and new updates on the qa website.  When you feel the qa site is stable, you can update the production server.   Since you're installing WP twice, create two databases for XCL (qa and prod) and a MySQL user for each database:  you can do this via your host's cpanel/panel management page.
 
 ## <a name="getStarted"></a> Getting Started With Wordpress ##
 
 ### Download and Install WordPress ###
-XCL was built on WordPress 3.9.1 (and had been updated to 4.1.1). For each WordPress environment to set up, download a fresh copy of 
+XCL was built on WordPress 3.9.1 (and works for WP up to 4.1.1). For each WordPress environment to set up, download a fresh copy of 
 WordPress from [wordpress.org](http://www.wordpress.org). Follow WordPress's [setup instructions](http://codex.wordpress.org/Installing_WordPress) to complete the WordPress installation. We recommend 
-that each wordpress environment have its own database, or at the very least its own table prefix.
+that each Wordpress environment have its own database, or at the very least its own table prefix.
 
 ### Download and Install WordPress Plugins ###
 Once WordPress is installed, install and activate the following WordPress plugins. The version number is the latest 
 XCL-tested version of the plugin. It is possible that later versions will also work, but it is not guaranteed.
 
-* [Types - Complete Solution for Custom Fields and Types](http://wordpress.org/plugins/types/) (version 1.5.7)
-* [Category Order and Taxonomy Terms Order](https://wordpress.org/plugins/taxonomy-terms-order/) (version 1.3.6)
+* [Types - Complete Solution for Custom Fields and Types](http://wordpress.org/plugins/types/) (version 1.6.5.1)
+* [Category Order and Taxonomy Terms Order](https://wordpress.org/plugins/taxonomy-terms-order/) (version 1.4.1)
 * [cbnet Multi Author Comment Notification](http://wordpress.org/plugins/cbnet-multi-author-comment-notification/) (version 3.2)
-* [JSON REST API](https://wordpress.org/plugins/json-rest-api/) (version 1.1)
+* [WP REST API (JSON REST API)](https://wordpress.org/plugins/json-rest-api/) (version 1.2.0)
 * [Pending Submission Notification](https://wordpress.org/plugins/pending-submission-notifications/) (version 1.0)
-* [Polylang](http://wordpress.org/plugins/polylang/) (version 1.5.3)
+* [Polylang](http://wordpress.org/plugins/polylang/) (version 1.7.2)
 * [Right Now Reloaded](https://wordpress.org/plugins/right-now-reloaded/) (version 2.2)
 * [Status Change Notifications](https://wordpress.org/plugins/status-change-notifications/) (version 1.0)
-* [User Role Editor](https://wordpress.org/plugins/user-role-editor/) (version 4.14.2)
+* [User Role Editor](https://wordpress.org/plugins/user-role-editor/) (version 4.18.3)
+* [Easy WP SMTP](https://wordpress.org/plugins/easy-wp-smtp/) (version 1.1.8)
 
 ### Configure WordPress and Plugins ###
 After installing WordPress, customize it by following these steps after logging into the admin dashboard:
@@ -97,6 +98,14 @@ After installing WordPress, customize it by following these steps after logging 
     * Minimum Level to Use this plugin should be whoever you designate to reorder the sections in the app
     * Auto-sort should be ON
     * Admin sort should be checked
+*For Easy WP SMTP, create an e-mail account that can be used with SMTP (gmail, for example: yoursite@gmail.com).  [This will assume you picked gmail.  Gmail is useful because many e-mail services block e-mails from Wordpress installations and you can send 2000 e-mails a day through this.](https://support.google.com/a/answer/176600?hl=en)
+     *  Enter "From Email Address" (yoursite@gmail.com)
+     *  Enter "From Name" (XCL App, for example)
+     *  Your SMTP Host (smtp.gmail.com, e.g) 
+     *  Type of encryption (SSL) 
+     *  SMTP Port (465 if SSL)
+     *  SMTP Authorization - Yes
+     *  SMTP Username (yoursite@gmail.com) and your e-mail's password.
 	
 If you hit any errors during this process, simply refresh the page and try your changes again.
 
